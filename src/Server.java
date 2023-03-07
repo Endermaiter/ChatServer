@@ -134,6 +134,9 @@ public class Server {
                 daOu.writeUTF(mensajeDev2);
                 System.out.println("Dato devuelto\n");
             }
+            case "Exit" -> {
+                System.exit(0);
+            }
         }
 
 
