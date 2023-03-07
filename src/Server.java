@@ -81,6 +81,13 @@ public class Server {
             case "Exit" -> {
                 System.exit(0);
             }
+            default -> {
+                //Devolvemos el dato
+                System.out.println("Devolviendo mensaje...\n");
+                String mensajeDev4 = "**Perdona, no te he entendido, ¿Puedes repetirlo?**";
+                daOu.writeUTF(mensajeDev4);
+                System.out.println("Mensaje devuelto:\n" + mensajeDev4);
+            }
         }
 
 
