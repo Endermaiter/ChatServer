@@ -3,7 +3,9 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class Server {
+public class Server extends Thread{
+
+    static Socket newSocket;
 
     public static void main(String[] args) throws IOException {
 
@@ -16,23 +18,37 @@ public class Server {
         InetSocketAddress addr = new InetSocketAddress("localhost", 5555);
         serverSocket.bind(addr);
 
+
+        int clientCount = 0;
+
         do {
             //Esperando a que llegue una conexión
             System.out.println("Aceptando conexiones...\n");
-            Socket newSocket = serverSocket.accept();
-
-            System.out.println("Conexión recibida!!\n");
-
-            //Instancia del objeto de entrada
-            InputStream is = newSocket.getInputStream();
-            DataInputStream daIn = new DataInputStream(is);
-            //Metemos en una variable la opcion leida que determina cómo el servidor debe tratar el dato
-            String mensaje = daIn.readUTF();
-            System.out.println("Mensaje recibido: " + mensaje);
-            devolverDatos(mensaje);
-
+            newSocket = serverSocket.accept();
+            Thread thread = new Thread(String.valueOf(clientCount));
+            thread.start();
+            clientCount++;
         } while (true);
 
+    }
+
+    @Override
+    public void run() {
+        while (true) {
+            try {
+                System.out.println("Conexión recibida!!\n");
+
+                //Instancia del objeto de entrada
+                InputStream is = newSocket.getInputStream();
+                DataInputStream daIn = new DataInputStream(is);
+                //Metemos en una variable la opcion leida que determina cómo el servidor debe tratar el dato
+                String mensaje = daIn.readUTF();
+                System.out.println("Mensaje recibido: " + mensaje);
+                devolverDatos(mensaje);
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+        }
     }
 
     public static void devolverDatos(String mensaje) throws IOException {
