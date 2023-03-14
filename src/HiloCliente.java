@@ -6,28 +6,32 @@ public class HiloCliente extends Thread{
 
     private final Socket cliente;
 
+    //Constructor del hilo con parametro de tipo socket para diferenciar el hilo de otros clientes
     public HiloCliente(Socket cliente){
         this.cliente = cliente;
     }
 
+    //Ejecucion del hilo
     public void run() {
         while (true) {
             try {
-                //System.out.println("Conexión recibida!!\n");
+                System.out.println("Conexión recibida!!\n");
                 //Instancia del objeto de entrada
                 InputStream is = cliente.getInputStream();
+                //Instanciamos un DataInputStream para facilitar la lectura
                 DataInputStream daIn = new DataInputStream(is);
-                //Metemos en una variable la opcion leida que determina cómo el servidor debe tratar el dato
+                //Leemos el mensaje y lo metemos en una variable
                 String mensaje = daIn.readUTF();
                 System.out.println("Mensaje recibido: " + mensaje);
-                devolverDatos(mensaje);
+                //LLamamos al metodo devolverMensaje() para devolver un mensaje al cliente
+                devolverMensaje(mensaje);
             } catch (IOException e) {
 
             }
         }
     }
 
-    public static void devolverDatos(String mensaje) throws IOException {
+    public static void devolverMensaje(String mensaje) throws IOException {
         //Creamos un nuevo socket
         Socket clienteSocket = new Socket();
         System.out.println("Estableciendo la conexión...\n");
@@ -38,7 +42,10 @@ public class HiloCliente extends Thread{
 
         //Instanciamos el objeto de salida
         OutputStream os = clienteSocket.getOutputStream();
+        //Instanciamos un DataOutputStream para facilitar la escritura
         DataOutputStream daOu = new DataOutputStream(os);
+
+        //Segun el mensaje reicibido...
         switch (mensaje) {
             case "Hola" -> {
                 //Devolvemos el dato
@@ -69,7 +76,10 @@ public class HiloCliente extends Thread{
                 daOu.writeUTF(mensajeDev3);
                 System.out.println("Mensaje devuelto\n");
             }
+
             //Casos especiales
+
+            //Si no recibe nada(el jTextField quedó en blanco)
             case "" -> {
                 //Devolvemos el dato
                 System.out.println("Devolviendo mensaje...\n");
@@ -77,9 +87,11 @@ public class HiloCliente extends Thread{
                 daOu.writeUTF(mensajeDev3);
                 System.out.println("Mensaje devuelto\n");
             }
+            //Si recibe la instruccion de cerrar el servidor
             case "Exit" -> {
                 System.exit(0);
             }
+            //Si recibe cualquier otra cosa que el servidor no entienda
             default -> {
                 //Devolvemos el dato
                 System.out.println("Devolviendo mensaje...\n");
@@ -88,7 +100,6 @@ public class HiloCliente extends Thread{
                 System.out.println("Mensaje devuelto:\n" + mensajeDev4);
             }
         }
-
 
         //Cerramos el socket
         clienteSocket.close();
