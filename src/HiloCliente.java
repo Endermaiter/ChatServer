@@ -14,8 +14,8 @@ public class HiloCliente extends Thread{
     //Ejecucion del hilo
     public void run() {
         while (true) {
+            //CONEXION RECIBIDA
             try {
-                System.out.println("Conexión recibida!!\n");
                 //Instancia del objeto de entrada
                 InputStream is = cliente.getInputStream();
                 //Instanciamos un DataInputStream para facilitar la lectura
